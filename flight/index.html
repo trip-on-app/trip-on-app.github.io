@@ -70,14 +70,13 @@ const AIRLINES={"FX":{"name":"FedEX항공","image":"https://www.airport.kr/sites
 function showAirlineLogo(flightNumber){
   const mark=$('airlineMark'),image=$('airlineLogo'),badge=$('airlineCode');
   const match=String(flightNumber||'').trim().toUpperCase().match(/^([A-Z0-9]{2}) *0*[0-9]/);
-  if(!match){mark.hidden=true;image.removeAttribute('src');return}
+  if(!match){mark.hidden=true;mark.classList.remove('has-logo');image.removeAttribute('src');return}
   const code=match[1],airline=AIRLINES[code];
-  mark.hidden=false;mark.classList.remove('has-logo');badge.textContent=code;
-  mark.setAttribute('aria-label',airline?airline.name+' 로고':code+' 항공사');
-  image.alt=airline?airline.name+' 로고':'';
-  image.onerror=()=>{mark.classList.remove('has-logo');image.removeAttribute('src')};
-  image.onload=()=>mark.classList.add('has-logo');
-  if(airline)image.src=airline.image;else image.removeAttribute('src');
+  mark.classList.remove('has-logo');mark.hidden=true;
+  image.onerror=()=>{mark.hidden=true;mark.classList.remove('has-logo');image.removeAttribute('src')};
+  image.onload=()=>{mark.hidden=false;mark.classList.add('has-logo')};
+  if(airline){mark.setAttribute('aria-label',airline.name+' 로고');image.alt=airline.name+' 로고';image.src=airline.image}
+  else image.removeAttribute('src');
 }
 const $=id=>document.getElementById(id);
 const params=new URLSearchParams(location.search);
