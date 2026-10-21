@@ -79,7 +79,7 @@ async function refresh(){
     const response=await fetch(API_BASE+'/v1/aircraft-shares/'+encodeURIComponent(shareId),{cache:'no-store'});
     const body=await response.json();
     if(!response.ok)throw Object.assign(new Error(body.error?.message||'위치 정보를 불러오지 못했어요.'),{status:response.status});
-    const data=body.data,point=[data.latitude,data.longitude];
+    const data=body.data;
     const heading=Number.isFinite(data.trackDegrees)?data.trackDegrees:null;
     $('flight').textContent=data.flightNumber;
     const origin=typeof data.origin==='string'?data.origin.trim().toUpperCase():'';
@@ -87,6 +87,15 @@ async function refresh(){
     $('origin').textContent=/^[A-Z]{3}$/.test(origin)?origin:'정보 없음';
     $('arrival').textContent=/^[A-Z]{3}$/.test(arrival)?arrival:'정보 없음';
     $('route').hidden=false;
+    if(!Number.isFinite(data.latitude)||!Number.isFinite(data.longitude)){
+      if(marker){marker.remove();marker=null}
+      trail.setLatLngs([]);trailPoints.length=0;
+      $('alt').textContent='–';$('altUnit').textContent='';$('altMeters').textContent='';
+      $('spd').textContent='–';$('spdKmh').textContent='';$('hdg').textContent='–';
+      $('foot').textContent='공유 링크가 준비됐어요. ADSB.lol에서 실제 신호가 확인되면 위치가 표시됩니다. · 30초마다 확인';
+      return;
+    }
+    const point=[data.latitude,data.longitude];
     const altitude=Number.isFinite(data.altitudeFeet)?data.altitudeFeet:null;
     $('alt').textContent=altitude==null?'–':Math.round(altitude).toLocaleString();
     $('altUnit').textContent=altitude==null?'':'ft';
