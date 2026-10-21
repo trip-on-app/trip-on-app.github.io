@@ -13,12 +13,15 @@ html,body{width:100%;height:100%;height:100dvh;margin:0;overflow:hidden}
 body{font-family:system-ui,"Noto Sans KR",sans-serif;color:var(--ink);background:var(--sky)}
 #map{position:fixed;inset:0;width:100%;height:100%;height:100dvh;background:var(--sky)}
 .panel{position:fixed;left:50%;bottom:max(12px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(560px,calc(100% - 24px));max-height:48vh;max-height:48dvh;overflow:auto;background:var(--paper);border-radius:20px;box-shadow:0 12px 40px rgba(16,36,59,.28);z-index:1000}
-.head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px 12px}
+.head{display:flex;align-items:center;justify-content:flex-start;gap:12px;padding:16px 20px 12px}
 .flight{min-width:0;font-size:clamp(23px,7vw,28px);line-height:1.2;font-weight:700;letter-spacing:.01em;margin:0;overflow-wrap:anywhere}
-.badge{flex:none;display:flex;align-items:center;gap:7px;font-size:13px;color:var(--ink-soft);white-space:nowrap}
-.dot{width:9px;height:9px;border-radius:50%;background:#b9b6aa}
-.live .dot{background:#1fa971;box-shadow:0 0 0 0 rgba(31,169,113,.5);animation:pulse 2s infinite}
-@keyframes pulse{to{box-shadow:0 0 0 8px rgba(31,169,113,0)}}
+.route{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;padding:0 20px 14px;color:var(--ink)}
+.route[hidden]{display:none}
+.route small{display:block;margin-bottom:3px;font-size:11px;color:var(--ink-soft)}
+.route b{font-size:15px;letter-spacing:.02em}
+.route span:last-child{text-align:right}
+.route-arrow{color:var(--ink-soft);font-size:18px}
+.converted{margin-top:3px;font-size:12px;color:var(--ink-soft);font-variant-numeric:tabular-nums}
 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px dashed var(--line)}
 .stat{min-width:0;padding:12px 18px 14px}
 .stat+.stat{border-left:1px dashed var(--line)}
@@ -30,9 +33,9 @@ body{font-family:system-ui,"Noto Sans KR",sans-serif;color:var(--ink);background
 .plane svg{width:44px;height:44px;filter:drop-shadow(0 2px 3px rgba(16,36,59,.45))}
 .leaflet-control-attribution{font-size:10px}
 .leaflet-top.leaflet-left,.leaflet-top.leaflet-right{top:max(8px,env(safe-area-inset-top))}
-@media(max-width:420px){.panel{width:calc(100% - 20px);border-radius:18px}.head{padding:14px 14px 10px;gap:8px}.badge{font-size:12px}.stat{padding:11px 12px 13px}.foot{padding:9px 14px 12px;font-size:11px}}
+@media(max-width:420px){.panel{width:calc(100% - 20px);border-radius:18px}.head{padding:14px 14px 10px;gap:8px}.route{padding:0 14px 12px}.route b{font-size:14px}.stat{padding:11px 12px 13px}.foot{padding:9px 14px 12px;font-size:11px}}
 @media(max-height:560px){.panel{max-height:54dvh}.head{padding-top:10px;padding-bottom:8px}.stat{padding-top:8px;padding-bottom:9px}.foot{padding-top:8px;padding-bottom:9px}}
-@media(prefers-reduced-motion:reduce){.live .dot{animation:none}.plane{transition:none}}
+@media(prefers-reduced-motion:reduce){.plane{transition:none}}
 </style>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 </head>
@@ -41,11 +44,15 @@ body{font-family:system-ui,"Noto Sans KR",sans-serif;color:var(--ink);background
 <section class="panel" aria-live="polite">
   <div class="head">
     <h1 class="flight" id="flight">위치 찾는 중</h1>
-    <div class="badge" id="badge"><i class="dot"></i><span id="status">위치 확인 중</span></div>
+  </div>
+  <div class="route" id="route" hidden>
+    <span><small>출발</small><b id="origin">—</b></span>
+    <span class="route-arrow" aria-hidden="true">→</span>
+    <span><small>도착</small><b id="arrival">—</b></span>
   </div>
   <div class="stats">
-    <div class="stat"><small>고도</small><b><span id="alt">–</span><span id="altUnit">ft</span></b></div>
-    <div class="stat"><small>속도</small><b><span id="spd">–</span><span>kt</span></b></div>
+    <div class="stat"><small>고도</small><b><span id="alt">–</span><span id="altUnit">ft</span></b><div class="converted" id="altMeters"></div></div>
+    <div class="stat"><small>속도</small><b><span id="spd">–</span><span>kt</span></b><div class="converted" id="spdKmh"></div></div>
     <div class="stat"><small>방향</small><b><span id="hdg">–</span><span>°</span></b></div>
   </div>
   <div class="foot" id="foot">위치 정보를 기다리고 있어요.</div>
@@ -65,10 +72,9 @@ const icon=L.divIcon({className:'',html:'<div class="plane">'+planeSvg+'</div>',
 let marker=null,first=true,stopped=false;
 const trail=L.polyline([],{color:'#f5b700',weight:4,opacity:.9,lineCap:'round'}).addTo(map);
 const trailPoints=[];
-function setStatus(live,label){$('badge').classList.toggle('live',live);$('status').textContent=label}
 function displayTime(value){const date=new Date(value);return Number.isNaN(date.getTime())?'시간 정보 없음':date.toLocaleTimeString('ko-KR',{hour:'numeric',minute:'2-digit',second:'2-digit'})+' 기준'}
 async function refresh(){
-  if(!shareId){setStatus(false,'잘못된 링크');$('flight').textContent='공유 링크를 확인해 주세요';$('foot').textContent='주소의 공유 ID가 올바르지 않아요.';stopped=true;return}
+  if(!shareId){$('flight').textContent='공유 링크를 확인해 주세요';$('foot').textContent='주소의 공유 ID가 올바르지 않아요.';stopped=true;return}
   try{
     const response=await fetch(API_BASE+'/v1/aircraft-shares/'+encodeURIComponent(shareId),{cache:'no-store'});
     const body=await response.json();
@@ -76,12 +82,20 @@ async function refresh(){
     const data=body.data,point=[data.latitude,data.longitude];
     const heading=Number.isFinite(data.trackDegrees)?data.trackDegrees:null;
     $('flight').textContent=data.flightNumber;
-    $('alt').textContent=data.altitudeFeet==null?'–':Math.round(data.altitudeFeet).toLocaleString();
-    $('altUnit').textContent=data.altitudeFeet==null?'':'ft';
-    $('spd').textContent=data.groundSpeedKnots==null?'–':Math.round(data.groundSpeedKnots).toLocaleString();
+    const origin=typeof data.origin==='string'?data.origin.trim().toUpperCase():'';
+    const arrival=typeof data.arrival==='string'?data.arrival.trim().toUpperCase():'';
+    if(/^[A-Z]{3}$/.test(origin)&&/^[A-Z]{3}$/.test(arrival)){
+      $('origin').textContent=origin;$('arrival').textContent=arrival;$('route').hidden=false;
+    }else{$('route').hidden=true}
+    const altitude=Number.isFinite(data.altitudeFeet)?data.altitudeFeet:null;
+    $('alt').textContent=altitude==null?'–':Math.round(altitude).toLocaleString();
+    $('altUnit').textContent=altitude==null?'':'ft';
+    $('altMeters').textContent=altitude==null?'':Math.round(altitude*0.3048).toLocaleString()+' m';
+    const speed=Number.isFinite(data.groundSpeedKnots)?data.groundSpeedKnots:null;
+    $('spd').textContent=speed==null?'–':Math.round(speed).toLocaleString();
+    $('spdKmh').textContent=speed==null?'':Math.round(speed*1.852).toLocaleString()+' km/h';
     $('hdg').textContent=heading==null?'–':Math.round(heading).toString();
     const current=data.positionStatus==='CURRENT';
-    setStatus(current,current?'실시간':'마지막 수신');
     $('foot').textContent=displayTime(data.capturedAt)+' · 30초마다 갱신';
     if(!marker)marker=L.marker(point,{icon,keyboard:false}).addTo(map);
     marker.setLatLng(point);
@@ -99,7 +113,6 @@ async function refresh(){
     else if(!map.getBounds().pad(-0.2).contains(point))map.panTo(point,{animate:true,duration:.5});
   }catch(error){
     const expired=error instanceof Error&&'status' in error&&error.status===410;
-    setStatus(false,expired?'공유 링크 만료':'연결 오류');
     $('foot').textContent=expired?'이 공유 링크는 만료되었거나 취소되었습니다.':'위치를 갱신하지 못했어요. 연결을 확인하는 중입니다.';
     if(expired)stopped=true;
   }
