@@ -126,7 +126,10 @@
       summary::-webkit-details-marker { display: none; }
       summary::after { content: "+"; position: absolute; right: 3px; top: 16px; color: var(--blue); font: 500 20px Manrope, sans-serif; }
       details[open] summary::after { content: "−"; }
-      details p { margin: -2px 0 19px; padding-right: 18px; color: var(--muted); font-size: 11px; line-height: 1.9; word-break: keep-all; }
+      details .faq-answer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .32s cubic-bezier(.2, .75, .25, 1); }
+      details[open] .faq-answer { grid-template-rows: 1fr; }
+      details .faq-answer p { min-height: 0; overflow: hidden; margin: 0; padding: 0 18px 0 0; color: var(--muted); font-size: 11px; line-height: 1.9; word-break: keep-all; opacity: 0; transform: translateY(-6px); transition: opacity .2s ease, transform .28s ease, padding-bottom .28s ease; }
+      details[open] .faq-answer p { padding-bottom: 19px; opacity: 1; transform: translateY(0); }
       .availability { padding: 71px 0; text-align: center; background: #ebf1ff; }
       .availability .brand { justify-content: center; margin-bottom: 14px; }
       .availability h2 { margin: 0 auto 10px; font-size: 30px; }
@@ -292,10 +295,10 @@
             <p>항공편과 공항 데이터는 제공 범위와 갱신 시점에 따라 달라질 수 있어요.</p>
           </div>
           <div class="faq-list">
-            <details><summary>모든 항공편의 실시간 위치가 표시되나요?</summary><p>항공기 위치는 ADS-B 수신 범위와 운항 기체 확인 여부에 따라 달라요. 수신 신호를 찾지 못했거나 항공기와 항공편의 연결을 확인할 수 없으면 위치가 표시되지 않을 수 있어요.</p></details>
-            <details><summary>공항 정보는 모든 공항에서 같은가요?</summary><p>교통, 시설, 실내 지도 등 세부 기능은 공항별 데이터 제공 범위에 따라 달라요. 앱에 표시되는 갱신 시점과 안내를 함께 확인해 주세요.</p></details>
-            <details><summary>여권과 비자 정보도 관리할 수 있나요?</summary><p>여권 유효기간과 비자 만료 정보를 관리하고 목적지의 입국 안내를 확인할 수 있어요. 출입국 요건은 변경될 수 있으니 출발 전 공식 기관의 최신 안내도 확인해 주세요.</p></details>
-            <details><summary>Trip ON은 어디서 다운로드하나요?</summary><p>공식 앱 스토어 링크는 아직 준비 중이에요. 다운로드가 가능해지면 이 페이지에 안내할게요.</p></details>
+            <details><summary>모든 항공편의 실시간 위치가 표시되나요?</summary><div class="faq-answer"><p>항공기 위치는 ADS-B 수신 범위와 운항 기체 확인 여부에 따라 달라요. 수신 신호를 찾지 못했거나 항공기와 항공편의 연결을 확인할 수 없으면 위치가 표시되지 않을 수 있어요.</p></div></details>
+            <details><summary>공항 정보는 모든 공항에서 같은가요?</summary><div class="faq-answer"><p>교통, 시설, 실내 지도 등 세부 기능은 공항별 데이터 제공 범위에 따라 달라요. 앱에 표시되는 갱신 시점과 안내를 함께 확인해 주세요.</p></div></details>
+            <details><summary>여권과 비자 정보도 관리할 수 있나요?</summary><div class="faq-answer"><p>여권 유효기간과 비자 만료 정보를 관리하고 목적지의 입국 안내를 확인할 수 있어요. 출입국 요건은 변경될 수 있으니 출발 전 공식 기관의 최신 안내도 확인해 주세요.</p></div></details>
+            <details><summary>Trip ON은 어디서 다운로드하나요?</summary><div class="faq-answer"><p>공식 앱 스토어 링크는 아직 준비 중이에요. 다운로드가 가능해지면 이 페이지에 안내할게요.</p></div></details>
           </div>
         </div>
       </section>
