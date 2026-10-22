@@ -98,6 +98,10 @@
       .feature-icon svg { width: 21px; height: 21px; }
       .feature h3 { margin: 22px 0 8px; font-size: 17px; letter-spacing: -.05em; }
       .feature p { max-width: 275px; margin: 0; color: var(--muted); font-size: 12px; line-height: 1.85; word-break: keep-all; }
+      .feature-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 13px; }
+      .feature-tags span { padding: 6px 9px; border: 1px solid #e8edf5; border-radius: 999px; color: #52647f; background: #f8faff; font-size: 10px; font-weight: 600; white-space: nowrap; }
+      .feature:nth-child(2) .feature-tags span { border-color: #dfe8fa; background: #fff; }
+      .feature-note { margin-top: 8px !important; color: #8793a5 !important; font-size: 10px !important; }
       .feature-no { position: absolute; right: 22px; top: 22px; color: #a8b4c5; font: 700 10px "DM Sans", sans-serif; letter-spacing: .1em; }
       .feature-art { position: absolute; right: 22px; bottom: -14px; width: 125px; height: 86px; opacity: .46; }
       .feature-art path, .feature-art circle { fill: none; stroke: #a6bce7; stroke-width: 1.5; }
@@ -158,7 +162,7 @@
         .section { padding: 75px 0; }
         .section-head { margin-bottom: 27px; }
         .feature-grid { grid-template-columns: 1fr; gap: 11px; }
-        .feature { min-height: 222px; padding: 21px; }
+        .feature { min-height: 250px; padding: 21px; }
         .feature h3 { margin-top: 17px; }
         .journey { padding: 75px 0; }
         .steps { grid-template-columns: 1fr; gap: 24px; margin-top: 34px; }
@@ -239,21 +243,26 @@
               <span class="feature-no">01 / FLIGHT</span>
               <div class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m3 13 18-8-7 17-2.5-7L3 13Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="m11.5 15 4.7-4.7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></div>
               <h3>내 항공편을 한눈에</h3>
-              <p>항공편을 여행에 연결하고 운항 정보를 확인해요. 항공편 진행 알림과 항공기 위치 추적은 상세 화면에서 직접 시작할 수 있어요.</p>
+              <p>여행에 등록한 항공편의 운항 현황을 살펴보고, 필요한 정보만 이어서 확인해요.</p>
+              <div class="feature-tags" aria-label="항공편 기능"><span>운항 정보</span><span>진행 알림</span><span>항공기 위치</span></div>
+              <p class="feature-note">알림과 위치 추적은 항공편 상세에서 직접 시작해요.</p>
               <svg class="feature-art" viewBox="0 0 140 90" aria-hidden="true"><path d="M3 75c31-15 42-58 76-47s32 36 58 8"/><path d="M1 85c34-17 48-63 81-54s34 34 53 14"/><circle class="dot" cx="78" cy="28" r="4"/></svg>
             </article>
             <article class="feature">
               <span class="feature-no">02 / AIRPORT</span>
               <div class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 20h16M6 20V9l6-5 6 5v11M9 20v-6h6v6M9 10h.01M15 10h.01" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
               <h3>공항에 가기 전에</h3>
-              <p>출발 공항의 교통과 편의시설을 살펴보고, 지원되는 공항에서는 실내 지도도 확인해 보세요.</p>
+              <p>출발 공항에서 필요한 정보를 한 묶음으로 확인해 보세요.</p>
+              <div class="feature-tags" aria-label="공항 기능"><span>공항 교통</span><span>편의시설</span><span>실내 지도</span></div>
+              <p class="feature-note">실내 지도는 일부 공항에서 제공돼요.</p>
               <svg class="feature-art" viewBox="0 0 140 90" aria-hidden="true"><path d="M14 12h110v66H14zM14 34h110M45 12v66M83 12v66M14 56h110"/><circle class="dot" cx="82" cy="35" r="4"/></svg>
             </article>
             <article class="feature">
               <span class="feature-no">03 / JOURNEY</span>
               <div class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="16" rx="3" stroke="currentColor" stroke-width="1.7"/><path d="M8 3v4m8-4v4M4 10h16m-11 4 2 2 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
               <h3>여행 준비를 차근차근</h3>
-              <p>여행 기록과 준비 목록을 정리하고, 여권·비자 정보와 목적지 입국 안내를 확인해요.</p>
+              <p>여행 일정에 필요한 기록과 준비 항목을 함께 관리해요.</p>
+              <div class="feature-tags" aria-label="여행 준비 기능"><span>여행 기록</span><span>체크리스트</span><span>여권 · 비자</span><span>입국 안내</span></div>
               <svg class="feature-art" viewBox="0 0 140 90" aria-hidden="true"><path d="M19 18h88v57H19zM31 32h42M31 43h63M31 54h50"/><circle class="dot" cx="110" cy="67" r="12"/></svg>
             </article>
           </div>
