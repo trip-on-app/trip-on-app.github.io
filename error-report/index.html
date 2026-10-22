@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f7f9fd" />
+    <meta name="description" content="Trip ON 오류 신고 방법과 신고 상태 확인 방법을 안내합니다." />
+    <title>오류 신고 · Trip ON</title>
+    <link rel="icon" type="image/png" href="../assets/trip-on-logo-current.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root { color-scheme:light; --ink:#14243b; --muted:#64738a; --blue:#2155d9; --line:#e4eaf2; --paper:#f7f9fd; --white:#fff; font-family:"Noto Sans KR","DM Sans",sans-serif; }
+      * { box-sizing:border-box; }
+      body { margin:0; min-height:100vh; color:var(--ink); background:var(--paper); }
+      a { color:inherit; text-decoration:none; }
+      .wrap { width:min(100% - 48px, 1040px); margin:0 auto; }
+      header { height:82px; display:flex; align-items:center; justify-content:space-between; }
+      .brand { display:inline-flex; align-items:center; gap:11px; font:800 18px Manrope,sans-serif; letter-spacing:-.06em; }
+      .brand img { width:42px; height:42px; object-fit:cover; border-radius:13px; box-shadow:0 5px 15px #162e5517; }
+      nav { display:flex; align-items:center; gap:24px; color:#52627a; font-size:13px; font-weight:600; }
+      nav a:hover { color:var(--blue); }
+      nav .home { color:var(--blue); background:#edf2ff; padding:10px 15px; border-radius:999px; }
+      main { width:min(100% - 48px,760px); margin:80px auto 120px; }
+      .section-kicker { color:var(--blue); font:700 10px "DM Sans",sans-serif; letter-spacing:.16em; }
+      h1 { margin:15px 0; font-size:clamp(36px,7vw,58px); line-height:1.2; letter-spacing:-.07em; }
+      .lead { max-width:610px; margin:0; color:var(--muted); font-size:15px; line-height:1.9; word-break:keep-all; }
+      .steps { margin:42px 0 28px; padding:26px 28px; border:1px solid var(--line); border-radius:20px; background:var(--white); }
+      .steps h2 { margin:0 0 15px; font-size:17px; letter-spacing:-.04em; }
+      .steps ol { margin:0; padding-left:20px; color:var(--muted); font-size:13px; line-height:2; }
+      .status-note { padding:22px 24px; border-radius:18px; background:#eaf1ff; color:#52627a; font-size:13px; line-height:1.9; word-break:keep-all; }
+      .status-note strong { color:var(--ink); }
+      footer { padding:25px 0; border-top:1px solid var(--line); background:var(--white); color:#8995a7; font-size:11px; }
+      .footer-row { display:flex; align-items:center; justify-content:space-between; gap:14px; }
+      .footer-links { display:flex; gap:18px; color:#52627a; font-weight:600; }
+      @media (max-width:760px) { .wrap { width:min(100% - 36px,560px); } header { height:70px; } .brand img { width:38px; height:38px; } nav { gap:12px; font-size:11px; } main { width:min(100% - 36px,560px); margin:58px auto 82px; } .steps { margin-top:30px; padding:22px; } .footer-row { align-items:flex-start; flex-direction:column; } }
+    </style>
+  </head>
+  <body>
+    <header class="wrap">
+      <a class="brand" href="../" aria-label="Trip ON 홈"><img src="../assets/trip-on-logo-current.png" alt="" /><span>Trip ON</span></a>
+      <nav aria-label="주요 메뉴"><a href="../faq/">자주 묻는 질문</a><a class="home" href="../">소개 페이지</a></nav>
+    </header>
+    <main>
+      <p class="section-kicker">ERROR REPORT · TRIP ON</p>
+      <h1>오류를 알려주시면<br />확인할게요.</h1>
+      <p class="lead">Trip ON 앱에서 문제가 발생하면 앱 안의 오류 안내에서 <strong>오류 신고하기</strong>를 선택해 주세요. 보내주신 내용을 확인해 앱을 개선하는 데 활용할게요.</p>
+      <section class="steps" aria-labelledby="report-steps-title">
+        <h2 id="report-steps-title">오류 신고 방법</h2>
+        <ol><li>문제가 발생한 Trip ON 화면에서 오류 안내를 열어요.</li><li>오류 내용을 확인하고 신고 전송을 선택해요.</li><li>접수 후 표시되는 신고 상태 링크를 저장해 두세요.</li></ol>
+      </section>
+      <p class="status-note"><strong>신고 상태 확인</strong><br />각 신고에는 고유 ID가 발급돼요. 신고를 보낸 뒤 받은 개별 링크에서 접수 및 처리 상태를 확인할 수 있어요. 신고 내역은 해당 링크를 가진 사람만 조회할 수 있으니 다른 사람과 공유하지 마세요.</p>
+    </main>
+    <footer><div class="wrap footer-row"><span>© 2026 Trip ON. 여행의 순간을 한곳에.</span><div class="footer-links"><a href="../">소개 페이지</a><a href="../faq/">자주 묻는 질문</a></div></div></footer>
+  </body>
+</html>
