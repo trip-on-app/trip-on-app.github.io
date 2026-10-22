@@ -318,10 +318,67 @@
     <script>
       const faqReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
       const faqHeightHandlers = new WeakMap();
+      const faqCloseTimers = new WeakMap();
       document.querySelectorAll(".faq-list details").forEach((item) => {
+        const summary = item.querySelector("summary");
+        summary.addEventListener("click", (event) => {
+          if (!item.open) return;
+          event.preventDefault();
+          if (item.dataset.faqClosing) return;
+          if (faqReducedMotion.matches) {
+            item.open = false;
+            return;
+          }
+
+          const answer = item.querySelector(".faq-answer");
+          if (!answer) {
+            item.open = false;
+            return;
+          }
+          const previousHandler = faqHeightHandlers.get(answer);
+          if (previousHandler) answer.removeEventListener("transitionend", previousHandler);
+          const currentHeight = answer.getBoundingClientRect().height;
+          const currentOpacity = getComputedStyle(answer).opacity;
+          const currentTransform = getComputedStyle(answer).transform;
+          answer.style.transition = "none";
+          answer.style.height = `${currentHeight}px`;
+          answer.style.opacity = currentOpacity;
+          answer.style.transform = currentTransform;
+          void answer.offsetHeight;
+          answer.style.transition = "";
+          item.dataset.faqClosing = "true";
+
+          const finishClose = () => {
+            if (faqCloseTimers.has(item)) {
+              clearTimeout(faqCloseTimers.get(item));
+              faqCloseTimers.delete(item);
+            }
+            const activeHandler = faqHeightHandlers.get(answer);
+            if (activeHandler) answer.removeEventListener("transitionend", activeHandler);
+            faqHeightHandlers.delete(answer);
+            item.open = false;
+            delete item.dataset.faqClosing;
+            answer.style.height = "";
+            answer.style.opacity = "";
+            answer.style.transform = "";
+          };
+          const finishOnHeight = (transitionEvent) => {
+            if (transitionEvent.propertyName !== "height") return;
+            finishClose();
+          };
+          answer.addEventListener("transitionend", finishOnHeight);
+          faqHeightHandlers.set(answer, finishOnHeight);
+          faqCloseTimers.set(item, window.setTimeout(finishClose, 600));
+          requestAnimationFrame(() => {
+            answer.style.height = "0px";
+            answer.style.opacity = "0";
+            answer.style.transform = "translateY(-9px)";
+          });
+        });
+
         item.addEventListener("toggle", () => {
           const answer = item.querySelector(".faq-answer");
-          if (!item.open || !answer || faqReducedMotion.matches) return;
+          if (!item.open || !answer || faqReducedMotion.matches || item.dataset.faqClosing) return;
           const previousHandler = faqHeightHandlers.get(answer);
           if (previousHandler) answer.removeEventListener("transitionend", previousHandler);
           answer.style.transition = "none";
