@@ -126,7 +126,7 @@
       summary::-webkit-details-marker { display: none; }
       summary::after { content: "+"; position: absolute; right: 3px; top: 16px; color: var(--blue); font: 500 20px Manrope, sans-serif; }
       details[open] summary::after { content: "−"; }
-      details .faq-answer { overflow: hidden; }
+      details .faq-answer { height: auto; overflow: hidden; opacity: 1; transform: translateY(0); transition: height .42s cubic-bezier(.2, .75, .25, 1), opacity .28s ease, transform .36s ease; }
       details .faq-answer p { margin: -2px 0 19px; padding-right: 18px; color: var(--muted); font-size: 11px; line-height: 1.9; word-break: keep-all; }
       .availability { padding: 71px 0; text-align: center; background: #ebf1ff; }
       .availability .brand { justify-content: center; margin-bottom: 14px; }
@@ -317,20 +317,32 @@
     </footer>
     <script>
       const faqReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-      const faqAnimations = new WeakMap();
+      const faqHeightHandlers = new WeakMap();
       document.querySelectorAll(".faq-list details").forEach((item) => {
         item.addEventListener("toggle", () => {
           const answer = item.querySelector(".faq-answer");
           if (!item.open || !answer || faqReducedMotion.matches) return;
-          faqAnimations.get(item)?.cancel();
-          const animation = answer.animate(
-            [
-              { height: "0px", opacity: 0, transform: "translateY(-9px)" },
-              { height: `${answer.scrollHeight}px`, opacity: 1, transform: "translateY(0)" },
-            ],
-            { duration: 420, easing: "cubic-bezier(.2, .75, .25, 1)" }
-          );
-          faqAnimations.set(item, animation);
+          const previousHandler = faqHeightHandlers.get(answer);
+          if (previousHandler) answer.removeEventListener("transitionend", previousHandler);
+          answer.style.transition = "none";
+          answer.style.height = "0px";
+          answer.style.opacity = "0";
+          answer.style.transform = "translateY(-9px)";
+          void answer.offsetHeight;
+          answer.style.transition = "";
+          const restoreHeight = (event) => {
+            if (event.propertyName !== "height") return;
+            answer.style.height = "auto";
+            answer.removeEventListener("transitionend", restoreHeight);
+            faqHeightHandlers.delete(answer);
+          };
+          answer.addEventListener("transitionend", restoreHeight);
+          faqHeightHandlers.set(answer, restoreHeight);
+          requestAnimationFrame(() => {
+            answer.style.height = `${answer.scrollHeight}px`;
+            answer.style.opacity = "1";
+            answer.style.transform = "translateY(0)";
+          });
         });
       });
     </script>
