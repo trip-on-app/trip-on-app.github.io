@@ -126,10 +126,8 @@
       summary::-webkit-details-marker { display: none; }
       summary::after { content: "+"; position: absolute; right: 3px; top: 16px; color: var(--blue); font: 500 20px Manrope, sans-serif; }
       details[open] summary::after { content: "−"; }
-      details .faq-answer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .32s cubic-bezier(.2, .75, .25, 1); }
-      details[open] .faq-answer { grid-template-rows: 1fr; }
-      details .faq-answer p { min-height: 0; overflow: hidden; margin: 0; padding: 0 18px 0 0; color: var(--muted); font-size: 11px; line-height: 1.9; word-break: keep-all; opacity: 0; transform: translateY(-6px); transition: opacity .2s ease, transform .28s ease, padding-bottom .28s ease; }
-      details[open] .faq-answer p { padding-bottom: 19px; opacity: 1; transform: translateY(0); }
+      details .faq-answer { overflow: hidden; }
+      details .faq-answer p { margin: -2px 0 19px; padding-right: 18px; color: var(--muted); font-size: 11px; line-height: 1.9; word-break: keep-all; }
       .availability { padding: 71px 0; text-align: center; background: #ebf1ff; }
       .availability .brand { justify-content: center; margin-bottom: 14px; }
       .availability h2 { margin: 0 auto 10px; font-size: 30px; }
@@ -317,5 +315,24 @@
         <p>© 2026 Trip ON. 여행의 순간을 한곳에.</p>
       </div>
     </footer>
+    <script>
+      const faqReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const faqAnimations = new WeakMap();
+      document.querySelectorAll(".faq-list details").forEach((item) => {
+        item.addEventListener("toggle", () => {
+          const answer = item.querySelector(".faq-answer");
+          if (!item.open || !answer || faqReducedMotion.matches) return;
+          faqAnimations.get(item)?.cancel();
+          const animation = answer.animate(
+            [
+              { height: "0px", opacity: 0, transform: "translateY(-9px)" },
+              { height: `${answer.scrollHeight}px`, opacity: 1, transform: "translateY(0)" },
+            ],
+            { duration: 420, easing: "cubic-bezier(.2, .75, .25, 1)" }
+          );
+          faqAnimations.set(item, animation);
+        });
+      });
+    </script>
   </body>
 </html>
