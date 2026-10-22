@@ -25,6 +25,9 @@
         --line: #e4eaf2;
         --paper: #f7f9fd;
         --white: #fff;
+        --radius-control: 14px;
+        --radius-card: 22px;
+        --shadow-card: 0 14px 36px #1d315312;
         font-family: "Noto Sans KR", "DM Sans", sans-serif;
         scroll-behavior: smooth;
       }
@@ -48,8 +51,9 @@
       h1 em { color: var(--blue); font-style: normal; }
       .hero-copy > p { color: var(--muted); max-width: 450px; font-size: 16px; line-height: 1.9; word-break: keep-all; margin: 0; }
       .actions { display: flex; align-items: center; gap: 12px; margin-top: 31px; flex-wrap: wrap; }
-      .button { min-height: 48px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; border-radius: 14px; padding: 0 19px; font-size: 13px; font-weight: 700; transition: transform .2s, box-shadow .2s, background .2s; }
+      .button { min-height: 48px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; border-radius: var(--radius-control); padding: 0 19px; font-size: 13px; font-weight: 700; transition: transform .2s, box-shadow .2s, background .2s; }
       .button:hover { transform: translateY(-2px); }
+      .button:focus-visible, .nav a:focus-visible, summary:focus-visible { outline: 3px solid #83a7ff; outline-offset: 4px; }
       .button.primary { color: #fff; background: var(--blue); box-shadow: 0 10px 24px #2155d933; }
       .button.primary:hover { background: var(--blue-deep); box-shadow: 0 13px 28px #2155d940; }
       .button.secondary { background: #fff; border: 1px solid var(--line); color: #36465d; }
@@ -91,7 +95,8 @@
       h2 { margin: 12px 0 12px; font-size: clamp(28px, 3.5vw, 42px); line-height: 1.32; letter-spacing: -.065em; }
       .section-head p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.85; word-break: keep-all; }
       .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-      .feature { min-height: 275px; position: relative; overflow: hidden; padding: 25px; border: 1px solid var(--line); border-radius: 22px; background: #fff; }
+      .feature { min-height: 275px; position: relative; overflow: hidden; padding: 25px; border: 1px solid var(--line); border-radius: var(--radius-card); background: #fff; box-shadow: var(--shadow-card); transition: transform .2s ease, box-shadow .2s ease; }
+      .feature:hover { transform: translateY(-3px); box-shadow: 0 18px 40px #1d315318; }
       .feature:nth-child(2) { background: #f0f5ff; border-color: #e6edfb; }
       .feature-icon { width: 43px; height: 43px; display: grid; place-items: center; color: var(--blue); background: #edf3ff; border-radius: 14px; }
       .feature:nth-child(2) .feature-icon { background: #fff; }
@@ -205,8 +210,8 @@
           <h1 id="hero-title">여행의 순간을<br /><em>한곳에, Trip ON</em></h1>
           <p>항공편을 등록하고 운항 정보와 공항 준비를 확인해 보세요. 출발 전부터 여행을 마칠 때까지, 필요한 정보를 차근차근 모아드립니다.</p>
           <div class="actions">
-            <a class="button primary" href="#features">Trip ON 둘러보기 <span class="arrow" aria-hidden="true">→</span></a>
-            <a class="button secondary" href="#how-it-works">어떻게 쓰나요?</a>
+            <a class="button primary" href="#how-it-works">첫 항공편 등록 방법 <span class="arrow" aria-hidden="true">→</span></a>
+            <a class="button secondary" href="#features">Trip ON 기능 보기</a>
           </div>
           <div class="hero-note"><span></span> 항공편과 공항 준비를 위한 여행 동반자</div>
         </div>
@@ -275,11 +280,11 @@
         <div class="wrap">
           <div class="section-head">
             <div class="section-kicker">A SIMPLE JOURNEY</div>
-            <h2 id="journey-title">여행을 만들고,<br />출발 준비를 확인해요</h2>
-            <p>필요한 정보부터 하나씩 채워가면 Trip ON이 항공편과 공항 준비를 이어서 보여드려요.</p>
+            <h2 id="journey-title">먼저 여행을 등록하고,<br />항공편을 추가해요</h2>
+            <p>처음에는 목적지와 날짜를 입력해 여행을 만들고, 항공편을 추가하면 돼요. 이후 운항 정보와 공항 준비를 차례로 확인할 수 있어요.</p>
           </div>
           <div class="steps">
-            <article class="step"><div class="step-number">01</div><h3>여행을 등록해요</h3><p>목적지와 날짜를 입력해 여행을 만들고, 항공편을 추가해요.</p></article>
+            <article class="step"><div class="step-number">01</div><h3>여행을 등록해요</h3><p>목적지와 날짜를 입력해 여행을 만든 다음, 내 항공편을 추가해요.</p></article>
             <article class="step"><div class="step-number">02</div><h3>운항 정보를 살펴봐요</h3><p>항공편 상세에서 운항 현황을 확인하고 필요한 알림을 설정해요.</p></article>
             <article class="step"><div class="step-number">03</div><h3>공항 준비를 이어가요</h3><p>출발 공항 안내와 여행 준비 목록을 확인하고 여정을 정리해요.</p></article>
           </div>
